@@ -2,6 +2,8 @@
 import CreateRecordForm from "@/components/forms/create-record";
 import { ModalBase } from "@/components/modal-base";
 import TableSelect from "@/components/tables/select";
+import { patientSelect } from "@/data/patient-columns";
+import { userSelect } from "@/data/user-columns";
 import { selectPatient } from "@/services/patient";
 import { selectUser } from "@/services/user";
 import { Button } from "@nextui-org/react";
@@ -39,7 +41,7 @@ function PageCreateRecord() {
           Seleccionar Usuario
         </Button>
       </div>
-      <h1 className="text-base sm:text-3xl">LISTADO DE EXPEDIENTES</h1>
+      <h1 className="text-base sm:text-3xl">AGREGAR EXPEDIENTE</h1>
       <CreateRecordForm user={user} patient={patient} />
       <ModalBase
         close={() => setModalUser(false)}
@@ -47,6 +49,7 @@ function PageCreateRecord() {
         tittle={"Seleccionar Usuario"}
       >
         <TableSelect
+          columns={userSelect}
           select={(data) => {
             setUser(data);
             setModalUser(false);
@@ -61,6 +64,7 @@ function PageCreateRecord() {
         tittle={"Seleccionar Paciente"}
       >
         <TableSelect
+          columns={patientSelect}
           select={(data) => {
             setPatient(data);
             setModalPatient(false);

@@ -1,5 +1,6 @@
 import { menuSiderbar } from "@/data/menuSidebar";
 import { useAuthContext } from "@/providers/auth-provider";
+import { logout } from "@/services/auth";
 import According from "@/ui/according";
 import DropdownIcon from "@/ui/dropdown-icon";
 import {
@@ -21,6 +22,7 @@ import {
 import { useRouter } from "next/navigation";
 
 function Sidebar({ isResponsive, changeResponsive }) {
+
   const { push } = useRouter();
   const { user } = useAuthContext();
   return (
@@ -101,9 +103,12 @@ function Sidebar({ isResponsive, changeResponsive }) {
                 )
               )}
             </ul>
-            <a
-              href="#"
-              className="flex items-center p-2 text-red-700 rounded-lg dark:text-white hover:text-red-400 dark:hover:bg-gray-700 group"
+            <Link
+              onClick={async () => {
+                const result = await logout();
+                location.reload();
+              }}
+              className="cursor-pointer flex items-center p-2 text-red-700 rounded-lg dark:text-white hover:text-red-400 dark:hover:bg-gray-700 group"
             >
               <FontAwesomeIcon
                 className="h-5 w-5"
@@ -112,7 +117,7 @@ function Sidebar({ isResponsive, changeResponsive }) {
               {isResponsive ? null : (
                 <span className="ms-3">Cerrar Sesion</span>
               )}
-            </a>
+            </Link>
           </div>
         </div>
       </aside>

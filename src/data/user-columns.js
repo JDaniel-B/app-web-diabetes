@@ -13,5 +13,4 @@ export const userTable = [
   { name: "ROL", uid: "rol" },
   { name: "ESTADO", uid: "estado" },
   { name: "ACCIONES", uid: "actions" },
-
 ];

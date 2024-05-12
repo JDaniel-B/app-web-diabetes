@@ -5,6 +5,7 @@ export const appointmentColumns = [
   { name: "TELEFONO", uid: "telefono" },
   { name: "DESCRIPCION", uid: "descripcion" },
   { name: "FECHA", uid: "fecha" },
+  { name: "HORA", uid: "hora" },
   { name: "ESTADO", uid: "estado" },
   { name: "ACCIONES", uid: "actions" },
 ];

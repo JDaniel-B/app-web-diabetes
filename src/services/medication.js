@@ -2,25 +2,10 @@ import axios from "axios";
 import { toast } from "sonner";
 import { options } from "./options";
 
-export const findFuture = async () => {
-  try {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/web/appointment/findFuture`,
-      options
-    );
-    if (data?.error) {
-      return location.reload();
-    }
-    return {header: data.header, detail: data.detail};
-  } catch (error) {
-    toast.error("Error interno del servidor");
-  }
-};
-
 export const find = async () => {
   try {
     const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/web/appointment/find`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/web/medicament-charge/find`,
       options
     );
     if (data?.error) {
@@ -35,7 +20,7 @@ export const find = async () => {
 export const findByUser = async (id) => {
   try {
     const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/web/appointment/findByUser/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/web/medicament-charge/findByUser/${id}`,
       options
     );
     if (data?.error) {
@@ -50,7 +35,7 @@ export const findByUser = async (id) => {
 export const create = async (datos) => {
   try {
     const { data } = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/web/appointment/create`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/web/medicament-charge/create`,
       datos,
       options
     );
@@ -66,7 +51,7 @@ export const create = async (datos) => {
 export const update = async (datos, id) => {
   try {
     const { data } = await axios.patch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/web/appointment/update/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/web/medicament-charge/update/${id}`,
       datos,
       options
     );
@@ -82,7 +67,7 @@ export const update = async (datos, id) => {
 export const changeStatus = async (datos, id) => {
   try {
     const { data } = await axios.patch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/web/appointment/change-status/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/web/medicament-charge/change-status/${id}`,
       datos,
       options
     );

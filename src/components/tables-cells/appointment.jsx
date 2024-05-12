@@ -8,16 +8,27 @@ import {
   DropdownItem,
   Button,
 } from "@nextui-org/react";
+import moment from "moment";
 
 const statusColorMap = {
   1: "success",
   0: "danger",
 };
 
-export const renderCell = (data, columnKey, update, changeStatus) => {
+export const renderCellAppointment = (
+  data,
+  columnKey,
+  update,
+  changeStatus
+) => {
   const cellValue = data[columnKey];
+  const date = data?.fecha;
 
   switch (columnKey) {
+    case "fecha":
+      return <div>{moment(date).format('dddd, DD MMMM YYYY')}</div>;
+    case "hora":
+      return <div>{moment(date).format("LT")}</div>;
     case "estado":
       return (
         <Chip

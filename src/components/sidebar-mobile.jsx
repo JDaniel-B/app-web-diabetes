@@ -1,5 +1,6 @@
 import { menuSiderbar } from "@/data/menuSidebar";
 import { useAuthContext } from "@/providers/auth-provider";
+import { logout } from "@/services/auth";
 import According from "@/ui/according";
 import {
   faArrowRightFromBracket,
@@ -13,14 +14,17 @@ import {
   DropdownItem,
   User,
   Button,
+  Link,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 function SidebarMobile({ showSidebar, changeShow }) {
-  const [translateClass, setTranslateClass] = useState("-translate-x-0");
+  const { push } = useRouter();
+  const [translateClass, setTranslateClass] = useState("-translate-x-full");
 
   useEffect(() => {
-    setTranslateClass(showSidebar ? "-translate-x-full" : "-translate-x-0");
+    setTranslateClass(showSidebar ? "-translate-x-0" : "-translate-x-full");
   }, [showSidebar]);
 
   const { user } = useAuthContext();
@@ -65,27 +69,31 @@ function SidebarMobile({ showSidebar, changeShow }) {
                   <According key={index} item={item} />
                 ) : (
                   <li key={index}>
-                    <a
-                      href="#"
-                      className="flex items-center p-2 text-sky-800 rounded-lg dark:text-white hover:text-sky-500 dark:hover:bg-gray-700 group"
+                    <Link
+                      onClick={() => push(item.href)}
+                      className="cursor-pointer flex items-center p-2 text-sky-800 rounded-lg dark:text-white hover:text-sky-500 dark:hover:bg-gray-700 group"
                     >
                       <FontAwesomeIcon className="h-5 w-5" icon={item.icon} />
                       <span className="ms-3">{item.name}</span>
-                    </a>
+                    </Link>
                   </li>
                 )
               )}
             </ul>
-            <a
-              href="#"
-              className="flex items-center p-2 text-red-700 rounded-lg dark:text-white hover:text-red-400 dark:hover:bg-gray-700 group"
+            <Link
+              onClick={async () => {
+                const result = await logout();
+                location.reload();
+              }}
+              className="cursor-pointer flex items-center p-2 text-red-700 rounded-lg dark:text-white hover:text-red-400 dark:hover:bg-gray-700 group"
             >
               <FontAwesomeIcon
                 className="h-5 w-5"
                 icon={faArrowRightFromBracket}
               />
+
               <span className="ms-3">Cerrar Sesion</span>
-            </a>
+            </Link>
           </div>
         </div>
       </aside>

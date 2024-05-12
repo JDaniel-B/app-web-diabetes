@@ -10,13 +10,13 @@ import {
 } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PaginationTable from "../pagination";
-import { renderCell } from "../tables-cells/render-cell";
 import SelectRows from "@/ui/select-rows";
 import InputSearch from "@/ui/input-search";
 import Loading from "../loading";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { appointmentColumns } from "@/data/appointment-columns";
 import DropdownSearch from "@/ui/dropdown-search";
+import { renderCellAppointment } from "../tables-cells/appointment";
 
 const options = [
   { name: "Paciente", uid: "nombre" },
@@ -131,12 +131,12 @@ export default function TableAppointment({
       <TableHeader columns={appointmentColumns}>
         {(column) => <TableColumn key={column.uid}>{column.name}</TableColumn>}
       </TableHeader>
-      <TableBody loadingContent={<Loading />} items={items}>
+      <TableBody emptyContent={"No se encontraron datos."} loadingContent={<Loading />} items={items}>
         {(item) => (
           <TableRow key={item.id_cargo}>
             {(columnKey) => (
               <TableCell>
-                {renderCell(item, columnKey, update, changeStatus)}
+                {renderCellAppointment(item, columnKey, update, changeStatus)}
               </TableCell>
             )}
           </TableRow>

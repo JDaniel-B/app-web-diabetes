@@ -10,39 +10,43 @@ import {
 } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PaginationTable from "../pagination";
-import { renderCell } from "../tables-cells/render-cell";
 import SelectRows from "@/ui/select-rows";
 import InputSearch from "@/ui/input-search";
 import Loading from "../loading";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { appointmentColumns } from "@/data/appointment-columns";
 import DropdownSearch from "@/ui/dropdown-search";
+import { recordTable } from "@/data/record-columns";
+import { renderCellRecord } from "../tables-cells/record";
+import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/providers/auth-provider";
 
 const options = [
-  { name: "Paciente", uid: "nombre" },
+  { name: "Paciente", uid: "paciente" },
   { name: "Fecha", uid: "fecha" },
-  { name: "Usuario", uid: "usuario" },
 ];
 
-export default function TableRecord({
-  data = [],
-  add,
-  update,
-  changeStatus,
-}) {
+export default function TableRecord({ data = [], add, update, changeStatus }) {
+  const { push } = useRouter();
+  const { setHeader } = useAuthContext();
   const [filterValue, setFilterValue] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [statusFilter, setStatusFilter] = useState("all");
   const hasSearchFilter = Boolean(filterValue);
-  const [setsearchBy, setSetsearchBy] = useState("paciente");
+  const [searchBy, setSetsearchBy] = useState("paciente");
 
   const filteredItems = useMemo(() => {
     let filteredUsers = [...data];
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.nombre.toLowerCase().includes(filterValue.toLowerCase())
-      );
+      if (searchBy == "paciente") {
+        filteredUsers = filteredUsers.filter((user) =>
+          user.paciente.toLowerCase().includes(filterValue.toLowerCase())
+        );
+      } else {
+        filteredUsers = filteredUsers.filter((user) =>
+          user.fecha.toLowerCase().includes(filterValue.toLowerCase())
+        );
+      }
     }
     return filteredUsers;
   }, [data, filterValue, statusFilter]);
@@ -65,6 +69,11 @@ export default function TableRecord({
     }
   }, []);
 
+  const viewDetail = (data) => {
+    setHeader(data);
+    push('/record/detail')
+  };
+
   const topContent = useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
@@ -76,26 +85,26 @@ export default function TableRecord({
               setPage(1);
             }}
             onSearchChange={onSearchChange}
-            tittle={"nombre"}
+            tittle={searchBy}
           />
           <div className="flex justify-center flex-wrap gap-3">
             <DropdownSearch
-              setStatusFilter={setSetsearchBy}
-              statusFilter={setsearchBy}
+              value={searchBy}
               options={options}
+              change={(data) => setSetsearchBy(data)}
             />
             <Button
               color="primary"
               endContent={<FontAwesomeIcon icon={faPlus} />}
               onClick={() => add()}
             >
-              Agregar Cita
+              Agregar Expediente
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {data.length} Citas
+            Total {data.length} Expedientes
           </span>
           <label className="flex items-center text-default-400 text-small">
             Filas Por Pagina:
@@ -128,15 +137,21 @@ export default function TableRecord({
         <PaginationTable page={page} pages={pages} setPage={setPage} />
       }
     >
-      <TableHeader columns={appointmentColumns}>
+      <TableHeader columns={recordTable}>
         {(column) => <TableColumn key={column.uid}>{column.name}</TableColumn>}
       </TableHeader>
       <TableBody loadingContent={<Loading />} items={items}>
         {(item) => (
-          <TableRow key={item.id_cargo}>
+          <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell>
-                {renderCell(item, columnKey, update, changeStatus)}
+                {renderCellRecord(
+                  item,
+                  columnKey,
+                  update,
+                  changeStatus,
+                  viewDetail
+                )}
               </TableCell>
             )}
           </TableRow>

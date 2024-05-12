@@ -1,13 +1,22 @@
-import { create, getDiabetes } from "@/services/record";
+import { create, getDiabetes, replace } from "@/services/record";
 import ButtonSubmit from "@/ui/button-submit";
 import InputDate from "@/ui/input-date";
 import InputDisabled from "@/ui/input-disabled";
 import SelectOption from "@/ui/select";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+} from "@nextui-org/react";
 
 function CreateRecordForm({ user, patient }) {
   const [diabetes, setDiabetes] = useState();
+  const [openModal, setOpenModal] = useState(false);
+  const [message, setMessage] = useState("");
   const [record, setRecord] = useState({
     idPatient: "",
     idUser: "",
@@ -33,22 +42,30 @@ function CreateRecordForm({ user, patient }) {
     setRecord({ ...record, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.promise(
-      async () => {
-        const { isValid, message } = await create(record);
-        if (isValid) {
-          return message;
-        }
-        throw new Error(message);
-      },
-      {
-        error: (data) => `${data.message}`,
-        success: (data) => `${data}`,
-        loading: "Cargando...",
-      }
-    );
+    const { isValid, message, isExist } = await create(record);
+    if (isExist) {
+      setMessage(message);
+      return setOpenModal(true);
+    }
+    if (isValid) {
+      return toast.success(message);
+    } else {
+      return toast.error(message);
+    }
+  };
+
+  const replaceRecord = async () => {
+    const { isValid, message, isExist } = await replace(record);
+    if (isExist) {
+      return toast.error(message);
+    }
+    if (isValid) {
+      return toast.success(message);
+    } else {
+      return toast.error(message);
+    }
   };
 
   return (
@@ -69,6 +86,42 @@ function CreateRecordForm({ user, patient }) {
       <div className="col-span-full flex justify-center items-center">
         <ButtonSubmit tittle={"Agregar Expediente"} />
       </div>
+      <Modal
+        isDismissable={false}
+        placement="center"
+        hideCloseButton={true}
+        isOpen={openModal}
+        scrollBehavior="inside"
+      >
+        <ModalContent>
+          <ModalHeader className="flex text-2xl flex-col gap-1 items-center text-center">
+            {message}
+          </ModalHeader>
+          <ModalBody>
+            <div className="flex justify-center items-center gap-5 px-5">
+              <Button
+                color="primary"
+                variant="ghost"
+                className="w-12"
+                onClick={() => {
+                  replaceRecord();
+                  setOpenModal(false);
+                }}
+              >
+                Si
+              </Button>
+              <Button
+                variant="ghost"
+                color="danger"
+                className="w-12"
+                onClick={() => setOpenModal(false)}
+              >
+                No
+              </Button>
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </form>
   );
 }

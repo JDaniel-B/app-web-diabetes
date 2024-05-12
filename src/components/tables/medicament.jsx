@@ -7,7 +7,6 @@ import {
   TableRow,
   TableCell,
   Button,
-  getKeyValue,
 } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PaginationTable from "../pagination";
@@ -16,32 +15,34 @@ import InputSearch from "@/ui/input-search";
 import Loading from "../loading";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import DropdownSearch from "@/ui/dropdown-search";
+import { medicamentColumns } from "@/data/medicaments-columns";
+import { renderCell } from "../tables-cells/render-cell";
 
 const options = [
-  { name: "Nombre", uid: "nombre" },
-  { name: "Telefono", uid: "telefono" },
+  { name: "Paciente", uid: "nombre" },
+  { name: "Fecha", uid: "fecha" },
+  { name: "Usuario", uid: "usuario" },
 ];
 
-export default function TableSelect({ data = [], add, select, columns }) {
+export default function TableMedicaments({
+  data = [],
+  add,
+  update,
+  changeStatus,
+}) {
   const [filterValue, setFilterValue] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [statusFilter, setStatusFilter] = useState("all");
   const hasSearchFilter = Boolean(filterValue);
-  const [searchBy, setSearchBy] = useState("nombre");
+  const [setsearchBy, setSetsearchBy] = useState("paciente");
 
   const filteredItems = useMemo(() => {
     let filteredUsers = [...data];
     if (hasSearchFilter) {
-      if (searchBy == "nombre") {
-        filteredUsers = filteredUsers.filter((user) =>
-          user.nombre.toLowerCase().includes(filterValue.toLowerCase())
-        );
-      } else if (searchBy == "telefono") {
-        filteredUsers = filteredUsers.filter((user) =>
-          user.telefono.toString().includes(filterValue)
-        );
-      }
+      filteredUsers = filteredUsers.filter((user) =>
+        user.nombre.toLowerCase().includes(filterValue.toLowerCase())
+      );
     }
     return filteredUsers;
   }, [data, filterValue, statusFilter]);
@@ -75,12 +76,12 @@ export default function TableSelect({ data = [], add, select, columns }) {
               setPage(1);
             }}
             onSearchChange={onSearchChange}
-            tittle={searchBy}
+            tittle={"nombre"}
           />
           <div className="flex justify-center flex-wrap gap-3">
             <DropdownSearch
-              change={(data) => setSearchBy(data)}
-              value={searchBy}
+              setStatusFilter={setSetsearchBy}
+              statusFilter={setsearchBy}
               options={options}
             />
             <Button
@@ -88,11 +89,14 @@ export default function TableSelect({ data = [], add, select, columns }) {
               endContent={<FontAwesomeIcon icon={faPlus} />}
               onClick={() => add()}
             >
-              Agregar
+              Agregar Cargo
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
+          <span className="text-default-400 text-small">
+            Total {data.length} Cargos
+          </span>
           <label className="flex items-center text-default-400 text-small">
             Filas Por Pagina:
             <SelectRows
@@ -124,14 +128,16 @@ export default function TableSelect({ data = [], add, select, columns }) {
         <PaginationTable page={page} pages={pages} setPage={setPage} />
       }
     >
-      <TableHeader columns={columns}>
+      <TableHeader columns={medicamentColumns}>
         {(column) => <TableColumn key={column.uid}>{column.name}</TableColumn>}
       </TableHeader>
-      <TableBody loadingContent={<Loading />} items={items}>
+      <TableBody emptyContent={"No se encontraron datos."} loadingContent={<Loading />} items={items}>
         {(item) => (
-          <TableRow onClick={() => select(item)} key={item.id}>
+          <TableRow key={item.id_cargo}>
             {(columnKey) => (
-              <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+              <TableCell>
+                {renderCell(item, columnKey, update, changeStatus)}
+              </TableCell>
             )}
           </TableRow>
         )}

@@ -5,6 +5,7 @@ import {
   faHospitalUser,
   faUsers,
   faFileMedical,
+  faComments,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const menuSiderbar = [
@@ -33,9 +34,18 @@ export const menuSiderbar = [
     ],
   },
   {
-    name: "Cargos",
-    href: "/dashboard",
+    name: "Cargo Medicamento",
     icon: faFileInvoiceDollar,
+    subMenu: [
+      {
+        name: "Listado de Cargos",
+        href: "/medication-charge",
+      },
+      {
+        name: "Agregar Cargo",
+        href: "/medication-charge/create",
+      },
+    ],
   },
   {
     name: "Citas",
@@ -50,6 +60,11 @@ export const menuSiderbar = [
         href: "/appointment/create",
       },
     ],
+  },
+  {
+    name: "Chat",
+    href: "/chat",
+    icon: faComments,
   },
   {
     name: "Usuarios",

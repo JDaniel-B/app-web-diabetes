@@ -9,8 +9,11 @@ import {
   Link,
 } from "@nextui-org/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { push } = useRouter();
+
   return (
     <section className="flex h-screen w-screen items-center justify-center">
       <Card className="w-[400px]">
@@ -21,7 +24,11 @@ export default function Home() {
           <LoginForm />
         </CardBody>
         <CardFooter>
-          <Link className="m-auto cursor-pointer" underline="hover">
+          <Link
+            onClick={() => push("/reset-password")}
+            className="m-auto cursor-pointer"
+            underline="hover"
+          >
             ¿Has olvidado la contraseña?
           </Link>
         </CardFooter>

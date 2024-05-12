@@ -1,5 +1,5 @@
 "use client";
-import CreateAppointmentForm from "@/components/forms/create-appointment";
+import CreateMedicationForm from "@/components/forms/create-medication";
 import { ModalBase } from "@/components/modal-base";
 import TableSelect from "@/components/tables/select";
 import { recordSelect } from "@/data/record-columns";
@@ -8,7 +8,7 @@ import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
-function CreateAppointmentPage() {
+function MedicationCreatePage() {
   const { push } = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const [record, setRecord] = useState();
@@ -28,8 +28,8 @@ function CreateAppointmentPage() {
           Seleccionar Expediente
         </Button>
       </div>
-      <h1 className="text-base sm:text-3xl">AGREGAR CITA</h1>
-      <CreateAppointmentForm record={record} />
+      <h1 className="text-base sm:text-3xl">AGREGAR CARGO MEDICAMENTO</h1>
+      <CreateMedicationForm record={record} />
       <ModalBase
         close={() => setOpenModal(false)}
         isOpen={openModal}
@@ -49,4 +49,4 @@ function CreateAppointmentPage() {
   );
 }
 
-export default CreateAppointmentPage;
+export default MedicationCreatePage;
